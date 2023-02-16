@@ -1,6 +1,7 @@
 from rest_framework import viewsets
-from .models import Realisateur, Scenario, Film, Acteur, Jouer
-from .serializers import RealisateurSerializer, ScenarioSerializer, FilmSerializer, ActeurSerializer, JouerSerializer
+from .models import Realisateur, Scenario, Film, Acteur, Jouer, Client, Emprunter
+from .serializers import RealisateurSerializer, ScenarioSerializer, FilmSerializer, ActeurSerializer, JouerSerializer, \
+    ClientSerializer, EmprunterSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -68,6 +69,33 @@ class ActeurViewSet(viewsets.ModelViewSet):
 class JouerViewSet(viewsets.ModelViewSet):
     queryset = Jouer.objects.all()
     serializer_class = JouerSerializer
+
+
+class ClientViewSet(viewsets.ModelViewSet):
+    serializer_class = ClientSerializer
+    queryset = Client.objects.all()
+
+
+class EmprunterViewSet(viewsets.ModelViewSet):
+    serializer_class = EmprunterSerializer
+    queryset = Emprunter.objects.all()
+
+    @action(detail=True, methods=['post'])
+    def preter(self, request, pk=None):
+        emprunt = self.get_object()
+        serializer = self.get_serializer(emprunt, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def rendre(self, request, pk=None):
+        emprunt = self.get_object()
+        emprunt.est_rendu = True
+        emprunt.save()
+        serializer = self.get_serializer(emprunt)
+        return Response(serializer.data)
+
 #
 # class DirigeantViewSet(ModelViewSet):
 #     serializer_class = SerializerDirigeant

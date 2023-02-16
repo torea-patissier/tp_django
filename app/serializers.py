@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Realisateur, Scenario, Film, Acteur, Jouer
+from .models import Realisateur, Scenario, Film, Acteur, Jouer, Client, Emprunter
 
 
 class RealisateurSerializer(serializers.ModelSerializer):
@@ -29,4 +29,18 @@ class ActeurSerializer(serializers.ModelSerializer):
 class JouerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Jouer
-        fields = ['id_film', 'id_acteur']
+        fields = [ 'id', 'id_film', 'id_acteur']
+
+
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = ['id', 'nom', 'prenom', 'dateCreationCompte']
+
+
+class EmprunterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Emprunter
+        fields = ['id', 'idFilm', 'idClient', 'datePret', 'dateRetour', 'estRendu']
+
+

@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from app.views import RealisateurViewSet, ScenarioViewSet, FilmViewSet, ActeurViewSet, JouerViewSet
+from app.views import RealisateurViewSet, ScenarioViewSet, FilmViewSet, ActeurViewSet, JouerViewSet,ClientViewSet, EmprunterViewSet
 
 router = routers.SimpleRouter()
 router.register('realisateur', RealisateurViewSet, basename='realisteur')
@@ -25,6 +25,8 @@ router.register('scenario', ScenarioViewSet, basename='scenario')
 router.register('film', FilmViewSet, basename='film')
 router.register('acteur', ActeurViewSet, basename='acteur')
 router.register('jouer', JouerViewSet, basename='jouer')
+router.register('client', ClientViewSet, basename='client')
+router.register('emprunt', EmprunterViewSet, basename='emprunt')
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -32,4 +34,5 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("api/token/", TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path("api/token/refresh/", TokenRefreshView.as_view(), name='token_refresh'),
+
 ]
