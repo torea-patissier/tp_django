@@ -1,4 +1,42 @@
 from django.db import models
+from rest_framework import status, permissions
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class CustomObtainTokenPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        refresh_token = response.data.pop('refresh')
+        access_token = response.data.pop('access')
+        response.data['token'] = access_token
+        response.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
+        return response
+
+
+class BlacklistTokenView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        try:
+            refresh_token = request.COOKIES.get('refresh_token')
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
+
+
+class IsAdminUserOrReadOnly(permissions.IsAdminUser):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return super().has_permission(request, view)
 
 
 class Realisateur(models.Model):

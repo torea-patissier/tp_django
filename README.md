@@ -43,6 +43,12 @@ J'ai choisi POSTMAN pour la documentation car c'est un outil qui me permet de:
 - `http://127.0.0.1:8000/api/acteur/`
 - `http://127.0.0.1:8000/api/jouer/`
 
+## Utilisation
+ - Toutes les routes GET sont accessible
+ - En revanche pour les autres routes il faudra être authentifier
+ - Pour cela il faudra aller sur la route /api/token (voir doc postman)
+ - Utiliser l'access token pour s'authentifier
+ - Passer cet access token dans les authorization lors de l'utilisation de routes POST/ PUT/ DELETE
 
 ### Fonctionnalités
 
